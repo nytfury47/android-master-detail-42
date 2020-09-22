@@ -15,7 +15,11 @@ class ActivityDetail : AppCompatActivity() {
         setContentView(R.layout.activity_detail)
 
         selectedTrack = intent.getSerializableExtra(TRACK_KEY) as Track
-        Picasso.with(this).load(selectedTrack?.artwork).into(trackImageView)
+        Picasso.with(this)
+            .load(selectedTrack?.artwork)
+            .placeholder(R.drawable.placeholder_image)
+            .error(R.drawable.placeholder_image)
+            .into(trackImageView)
 
         val stringId = applicationInfo.labelRes
         val appName = if (stringId == 0) applicationInfo.nonLocalizedLabel.toString() else getString(stringId)

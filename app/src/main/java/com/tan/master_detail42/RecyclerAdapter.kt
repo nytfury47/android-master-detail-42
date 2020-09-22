@@ -41,7 +41,11 @@ class RecyclerAdapter(
         fun bindTrack(track: Track) {
             this.track = track
 
-            Picasso.with(view.context).load(track.artwork).into(view.itemImage)
+            Picasso.with(view.context)
+                .load(track.artwork)
+                .placeholder(R.drawable.placeholder_image)
+                .error(R.drawable.placeholder_image)
+                .into(view.itemImage)
             view.itemName.text = track.trackName
             view.itemGenre.text = track.genre
             view.itemPrice.text = String.format(view.context.getString(R.string.txt_activity_master_track_price), track.price)
