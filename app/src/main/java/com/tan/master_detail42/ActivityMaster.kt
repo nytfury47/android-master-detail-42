@@ -89,6 +89,11 @@ class ActivityMaster : AppCompatActivity(), TrackRequester.TrackRequesterRespons
             }
 
             title = getString(R.string.main_activity_title) + "(${trackList.size})"
+
+            // No results
+            if (newTrackList.isEmpty()) {
+                Toast.makeText(this, R.string.no_result, Toast.LENGTH_LONG).show()
+            }
         }
     }
 

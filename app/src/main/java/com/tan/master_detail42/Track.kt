@@ -6,20 +6,20 @@ import java.io.Serializable
 
 class Track(trackJSON: JSONObject) : Serializable {
 
-    lateinit var trackName: String
+    var trackName: String = TRACK_NAME
         private set
-    lateinit var artwork: String
+    var artwork: String = TRACK_IMAGE
         private set
-    lateinit var price: String
+    var price: String = TRACK_PRICE
         private set
-    lateinit var genre: String
+    var genre: String = TRACK_GENRE
         private set
-    lateinit var description: String
+    var description: String = TRACK_DESCRIPTION
         private set
 
     init {
         try {
-            trackName = trackJSON.getString(TRACK_NAME)
+            trackName = trackJSON.getString(NAME)
             artwork = trackJSON.getString(ARTWORK)
             price = trackJSON.getDouble(PRICE).toString()
             genre = trackJSON.getString(GENRE)
@@ -30,10 +30,18 @@ class Track(trackJSON: JSONObject) : Serializable {
     }
 
     companion object {
-        private const val TRACK_NAME = "trackName"
+        // trackJSON keys
+        private const val NAME = "trackName"
         private const val ARTWORK = "artworkUrl100"
         private const val PRICE = "trackPrice"
         private const val GENRE = "primaryGenreName"
         private const val DESCRIPTION = "longDescription"
+
+        // Track object default values
+        private const val TRACK_NAME = "Track Name"
+        private const val TRACK_IMAGE = "Track Image"
+        private const val TRACK_PRICE = "Track Price"
+        private const val TRACK_GENRE = "Track Genre"
+        private const val TRACK_DESCRIPTION = "Track Description"
     }
 }
