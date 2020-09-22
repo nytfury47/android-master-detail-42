@@ -4,6 +4,9 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.Serializable
 
+/**
+ * Data class for the track item
+ */
 class Track(trackJSON: JSONObject) : Serializable {
 
     var trackName: String = TRACK_NAME

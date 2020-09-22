@@ -10,7 +10,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_master.*
-import java.io.IOException
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
@@ -18,6 +17,9 @@ import android.os.Handler
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * Activity class for the master view of the track list from iTunes Search API
+ */
 class ActivityMaster : AppCompatActivity(), TrackRequester.TrackRequesterResponse {
 
     private lateinit var linearLayoutManager: LinearLayoutManager
@@ -31,21 +33,22 @@ class ActivityMaster : AppCompatActivity(), TrackRequester.TrackRequesterRespons
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_master)
 
-        // Initialize AppPreferences
+        // Initialize AppPreferences (Persistence)
         AppPreferences.init(this)
 
-        // Persistence: Last visit
+        // Last visit info
         val lastVisit = if (AppPreferences.lastVisit.isNullOrEmpty()) getCurrentDateTime() else AppPreferences.lastVisit
         textViewLastVisit.text = String.format(getString(R.string.main_activity_last_visit), lastVisit)
         AppPreferences.lastVisit = getCurrentDateTime()
 
-        // Setup Master View's components
+        // Setup master view's components
         title = String.format(getString(R.string.main_activity_title), trackList.size)
 
         linearLayoutManager = LinearLayoutManager(this)
         gridLayoutManager = GridLayoutManager(this, 3)
-        recyclerView.layoutManager = if (AppPreferences.isGridLayout) gridLayoutManager else linearLayoutManager
 
+        // Use last layout used
+        recyclerView.layoutManager = if (AppPreferences.isGridLayout) gridLayoutManager else linearLayoutManager
         adapter = RecyclerAdapter(trackList)
         recyclerView.adapter = adapter
 
@@ -54,14 +57,18 @@ class ActivityMaster : AppCompatActivity(), TrackRequester.TrackRequesterRespons
 
     override fun onStart() {
         super.onStart()
+
+        // Start request for track list
         if (trackList.size == 0) {
-            requestTrack()
+            progressBar.visibility = View.VISIBLE
+            trackRequester.getTrack()
         }
     }
 
     override fun onResume() {
         super.onResume()
 
+        // Display error message if internet is not available
         if (!isInternetAvailable()) Toast.makeText(this, R.string.check_internet, Toast.LENGTH_LONG).show()
     }
 
@@ -78,6 +85,9 @@ class ActivityMaster : AppCompatActivity(), TrackRequester.TrackRequesterRespons
         return super.onOptionsItemSelected(item)
     }
 
+    /**
+     * Confirm exit from app
+     */
     override fun onBackPressed() {
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed()
@@ -89,6 +99,9 @@ class ActivityMaster : AppCompatActivity(), TrackRequester.TrackRequesterRespons
         Handler().postDelayed( { doubleBackToExitPressedOnce = false }, DELAY_EXIT)
     }
 
+    /**
+     * Handle and start displaying track data
+     */
     override fun receivedNewTrackList(newTrackList: ArrayList<Track>) {
         runOnUiThread {
             progressBar.visibility = View.INVISIBLE
@@ -100,13 +113,16 @@ class ActivityMaster : AppCompatActivity(), TrackRequester.TrackRequesterRespons
 
             title = String.format(getString(R.string.main_activity_title), trackList.size)
 
-            // No results
+            // No result
             if (newTrackList.isEmpty()) {
                 Toast.makeText(this, R.string.no_result, Toast.LENGTH_LONG).show()
             }
         }
     }
 
+    /**
+     * Toggle master view's layout: either grid or linear (vertical)
+     */
     private fun changeLayoutManager() {
         if (recyclerView.layoutManager == linearLayoutManager) {
             recyclerView.layoutManager = gridLayoutManager
@@ -117,15 +133,9 @@ class ActivityMaster : AppCompatActivity(), TrackRequester.TrackRequesterRespons
         }
     }
 
-    private fun requestTrack() {
-        try {
-            progressBar.visibility = View.VISIBLE
-            trackRequester.getTrack()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
-
+    /**
+     * Check for internet connection
+     */
     @Suppress("DEPRECATION")
     private fun isInternetAvailable(): Boolean {
         var result = false
@@ -150,6 +160,9 @@ class ActivityMaster : AppCompatActivity(), TrackRequester.TrackRequesterRespons
         return result
     }
 
+    /**
+     * Helper function for getting the date/time the user last visited the app
+     */
     private fun getCurrentDateTime() = SimpleDateFormat("MM/dd/yyyy hh:mm:ss", Locale.getDefault()).format(Calendar.getInstance().time)
 
     companion object {

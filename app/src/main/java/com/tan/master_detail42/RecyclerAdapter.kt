@@ -7,6 +7,9 @@ import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.recyclerview_item_row.view.*
 
+/**
+ * Main recycler adapter for the recycler view used by the master view
+ */
 class RecyclerAdapter(
     private val tracks: ArrayList<Track>
 ) : RecyclerView.Adapter<RecyclerAdapter.TrackHolder>()  {
@@ -31,6 +34,9 @@ class RecyclerAdapter(
             v.setOnClickListener(this)
         }
 
+        /**
+         * Handle switching from master view to detail view
+         */
         override fun onClick(v: View) {
             val context = itemView.context
             val showTrackIntent = Intent(context, ActivityDetail::class.java)
@@ -41,6 +47,7 @@ class RecyclerAdapter(
         fun bindTrack(track: Track) {
             this.track = track
 
+            // Set track info
             Picasso.with(view.context)
                 .load(track.artwork)
                 .placeholder(R.drawable.placeholder_image)

@@ -9,6 +9,9 @@ import org.json.JSONObject
 import java.io.IOException
 import java.util.ArrayList
 
+/**
+ * Class for handling the search API request
+ */
 class TrackRequester(listeningActivity: Activity) {
 
     interface TrackRequesterResponse {
@@ -23,6 +26,9 @@ class TrackRequester(listeningActivity: Activity) {
         client = OkHttpClient()
     }
 
+    /**
+     * Handle search api request and response
+     */
     fun getTrack() {
         var resultList: JSONArray
         val trackList = ArrayList<Track>()

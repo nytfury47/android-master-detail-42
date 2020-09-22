@@ -11,6 +11,9 @@ import android.view.animation.Animation
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_splash.*
 
+/**
+ * Activity class for simple splash view during start of app
+ */
 class ActivitySplash : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

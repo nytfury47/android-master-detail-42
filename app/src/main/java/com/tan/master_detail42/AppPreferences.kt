@@ -3,6 +3,10 @@ package com.tan.master_detail42
 import android.content.Context
 import android.content.SharedPreferences
 
+/**
+ * Persistence mechanism for saving and reusing data within the app.
+ * Using Singleton design pattern which is very helpful for checking/using persistent data.
+ */
 object AppPreferences {
 
     private const val SHARED_PREFS_NAME = "MD42_Preferences"
