@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Master-Detail 42</string>
-    <string name="main_activity_title">Track List</string>
+    <string name="main_activity_title">Tracks (%1$d)</string>
+    <string name="main_activity_last_visit">&#160;Last visit: %1$s&#160;</string>
     <string name="change_layout_manager">Change Layout</string>
     <string name="check_internet">There is an issue with the network connection. Please check your settings and try again.</string>
     <string name="toast_a_backToExit">Press Back again to exit.</string>

@@ -11,11 +11,12 @@ import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_master.*
 import java.io.IOException
-import java.util.ArrayList
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Handler
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ActivityMaster : AppCompatActivity(), TrackRequester.TrackRequesterResponse {
 
@@ -30,12 +31,21 @@ class ActivityMaster : AppCompatActivity(), TrackRequester.TrackRequesterRespons
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_master)
 
-        title = getString(R.string.main_activity_title) + "(${trackList.size})"
+        // Initialize AppPreferences
+        AppPreferences.init(this)
+
+        // Persistence: Last visit
+        val lastVisit = if (AppPreferences.lastVisit.isNullOrEmpty()) getCurrentDateTime() else AppPreferences.lastVisit
+        textViewLastVisit.text = String.format(getString(R.string.main_activity_last_visit), lastVisit)
+        AppPreferences.lastVisit = getCurrentDateTime()
+
+        // Setup Master View's components
+        title = String.format(getString(R.string.main_activity_title), trackList.size)
 
         linearLayoutManager = LinearLayoutManager(this)
         gridLayoutManager = GridLayoutManager(this, 3)
+        recyclerView.layoutManager = if (AppPreferences.isGridLayout) gridLayoutManager else linearLayoutManager
 
-        recyclerView.layoutManager = gridLayoutManager
         adapter = RecyclerAdapter(trackList)
         recyclerView.adapter = adapter
 
@@ -88,7 +98,7 @@ class ActivityMaster : AppCompatActivity(), TrackRequester.TrackRequesterRespons
                 adapter.notifyItemInserted(trackList.size - 1)
             }
 
-            title = getString(R.string.main_activity_title) + "(${trackList.size})"
+            title = String.format(getString(R.string.main_activity_title), trackList.size)
 
             // No results
             if (newTrackList.isEmpty()) {
@@ -100,8 +110,10 @@ class ActivityMaster : AppCompatActivity(), TrackRequester.TrackRequesterRespons
     private fun changeLayoutManager() {
         if (recyclerView.layoutManager == linearLayoutManager) {
             recyclerView.layoutManager = gridLayoutManager
+            AppPreferences.isGridLayout = true
         } else {
             recyclerView.layoutManager = linearLayoutManager
+            AppPreferences.isGridLayout = false
         }
     }
 
@@ -137,6 +149,8 @@ class ActivityMaster : AppCompatActivity(), TrackRequester.TrackRequesterRespons
 
         return result
     }
+
+    private fun getCurrentDateTime() = SimpleDateFormat("MM/dd/yyyy hh:mm:ss", Locale.getDefault()).format(Calendar.getInstance().time)
 
     companion object {
         private const val DELAY_EXIT = 2000L

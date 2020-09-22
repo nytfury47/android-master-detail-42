@@ -14,6 +14,19 @@
         android:scrollbars="vertical">
     </androidx.recyclerview.widget.RecyclerView>
 
+    <TextView
+        android:id="@+id/textViewLastVisit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="#E3E3E3"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/main_activity_last_visit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"
