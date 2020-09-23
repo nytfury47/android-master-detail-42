@@ -29,12 +29,12 @@ class ActivitySplash : AppCompatActivity() {
     private fun animateLogo(tv: TextView, fadeIn: Boolean = true) {
         val anim = AlphaAnimation(if (fadeIn) 0f else 1f, if (fadeIn) 1f else 0f)
         anim.interpolator = AccelerateInterpolator()
-        anim.duration = 1000L
+        anim.duration = 500L
 
         anim.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationEnd(animation: Animation) {
                 if (fadeIn) {
-                    Handler().postDelayed({ animateLogo(tv, false) }, 2000L)
+                    Handler().postDelayed({ animateLogo(tv, false) }, 500L)
                 } else {
                     tv.visibility = View.GONE
                     startActivity(Intent(this@ActivitySplash, ActivityMaster::class.java))
